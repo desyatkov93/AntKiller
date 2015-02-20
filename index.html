@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="wrap">
+		<div id="lostAnts">0</div>
+		<div id="killAnts">0</div>
+	</div>
+	<script>
+var Kill = 0;
+var Lost = 0;
+
+var killTablo = document.getElementById('killAnts');
+var lostTablo = document.getElementById('lostAnts');
+
+function CreateAnts(){
+	var elem = document.getElementById('wrap');
+	var ant = document.createElement('div');
+	ant.className = 'ant';
+	var left = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
+	ant.style.left = left + '%';
+	ant.style.top = '100%';
+	ant.onclick = killing;
+	elem.appendChild(ant);
+};
+CreateAnts();
+
+function run(){
+	var allAnts = document.getElementsByClassName('ant');
+	var size = allAnts.length;
+	for(var i = 0; i<size;i++){
+		step(allAnts[i]);
+	}
+}
+
+function step(elem){
+	try{
+	var oldTop = elem.style.top;
+	oldTop = oldTop.slice(0,-1);
+	var newTop = +oldTop - 0.5;
+	elem.style.top = newTop + '%';
+	if(newTop < 10)
+	{
+		Lost++;
+		lostTablo.innerHTML = Lost;
+		deleteAnt(elem);
+	}
+	}
+	catch(e)
+	{
+
+	}
+}
+
+function deleteAnt(elem){
+	document.getElementById('wrap').removeChild(elem);
+}
+
+
+function killing(){
+	this.className = 'deadAnt';
+	Kill++; // добавляем счёт
+	this.onclick = function(){return false};   // снимаем обработчик, что бы одного муравья нельзя было убить несколько раз
+	killTablo.innerHTML = Kill; // записываем счётчик в табло
+}
+
+
+function clearField(){
+	try{
+	var deadAnts = document.getElementsByClassName('deadAnt');
+	var size = deadAnts.length;
+	for(var i = 0; i<size;i++){
+		deleteAnt(deadAnts[i]);
+	}
+}
+catch(e){
+
+}
+}
+
+
+
+
+setInterval(function(){   // создание муравьёв
+	CreateAnts();
+},1500)
+
+
+setInterval(function(){  // движения муравьёв
+run();
+},100);
+
+
+setInterval(function(){       // уборка трупиков
+clearField();
+},2500)
+
+	</script>
+</body>
+</html>
